@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Button Example</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000; /* Чёрный фон */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #000;
+            background-color: #fff; /* Белая кнопка */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background-color: #f0f0f0; /* Изменение цвета при наведении */
+        }
+        .button:active {
+            transform: scale(0.95); /* Эффект нажатия кнопки */
+        }
+    </style>
+</head>
+<body>
+    <button class="button">Click Me</button>
+</body>
+</html>
