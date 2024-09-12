@@ -17,6 +17,7 @@
             overflow: hidden;
             color: white;
             position: relative;
+            text-align: center;
         }
 
         .message {
@@ -24,117 +25,112 @@
         }
 
         .welcome-message {
-            font-size: 24px;
+            font-size: 20px;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
 
         .button {
             background-color: #ffffff;
             color: black;
-            padding: 15px 40px;
-            font-size: 20px;
+            padding: 8px 20px;
+            font-size: 16px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-block;
-            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-decoration: none;
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
-            vertical-align: middle;
+            margin-top: 20px;
         }
 
         .button:hover {
             background-color: #f1f1f1;
-            transform: scale(1.1);
+            transform: scale(1.05);
             box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.6);
         }
 
         .vp-image {
-            width: 25px;
-            height: 25px;
-            vertical-align: middle;
-            margin-top: -3px;
+            width: 20px;
+            height: 20px;
+            margin-left: 5px;
         }
 
         #score {
-            font-size: 24px;
+            font-size: 20px;
             margin-top: 20px;
-        }
-
-        #mobile-content, #telegram-content, #non-telegram-content, #desktop-content {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        @media only screen and (max-width: 767px) {
-            body, html {
-                height: 100vh;
-                width: 100vw;
-                overflow: hidden;
-            }
-
-            .message {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
         }
     </style>
 </head>
 <body>
-    <div id="telegram-content" class="message">
-        <p class="welcome-message" id="score">Score: 0 <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/6375d6a4f61ac5030391ae2f8eda5506ffc2d867/VRX.png" alt="VP Image" class="vp-image"></p>
+    <div id="desktop-content" class="message" style="display:none;">
+        <p class="welcome-message">Этот сайт поддерживается только на мобильных устройствах.</p>
     </div>
 
-    <div id="non-telegram-content" class="message">
+    <div id="non-telegram-content" class="message" style="display:none;">
         <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
         <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">
-            Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/6375d6a4f61ac5030391ae2f8eda5506ffc2d867/VRX.png" alt="VP Image" class="vp-image">
+            Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image">
         </a>
     </div>
 
-    <div id="desktop-content" class="message">
-        <p>Сайт поддерживает только мобильные устройства.</p>
+    <div id="telegram-content" class="message" style="display:none;">
+        <p class="welcome-message" id="score">Score: 0 <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image"></p>
+        <button id="increase-score" class="button">Increase Score</button>
     </div>
 
     <script>
-        function isTelegram() {
-            return /Telegram/.test(navigator.userAgent);
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
         }
 
-        function isMobile() {
-            return /Mobi/.test(navigator.userAgent);
+        function isTelegram() {
+            return /Telegram/.test(navigator.userAgent);
         }
 
         function displayContent() {
             if (isMobile()) {
                 if (isTelegram()) {
-                    // Предположим, что количество очков хранится в localStorage
                     const points = localStorage.getItem('userPoints') || '0';
                     document.getElementById('score').textContent = `Score: ${points}`;
                     document.getElementById('telegram-content').style.display = 'block';
                     document.getElementById('non-telegram-content').style.display = 'none';
                     document.getElementById('desktop-content').style.display = 'none';
                 } else {
-                    document.getElementById('telegram-content').style.display = 'none';
                     document.getElementById('non-telegram-content').style.display = 'block';
+                    document.getElementById('telegram-content').style.display = 'none';
                     document.getElementById('desktop-content').style.display = 'none';
                 }
             } else {
-                document.getElementById('telegram-content').style.display = 'none';
-                document.getElementById('non-telegram-content').style.display = 'none';
                 document.getElementById('desktop-content').style.display = 'block';
+                document.getElementById('non-telegram-content').style.display = 'none';
+                document.getElementById('telegram-content').style.display = 'none';
             }
         }
 
-        displayContent();
+        function updateScore(increaseAmount) {
+            let currentPoints = parseInt(localStorage.getItem('userPoints') || '0', 10);
+            currentPoints += increaseAmount;
+            localStorage.setItem('userPoints', currentPoints);
+            document.getElementById('score').textContent = `Score: ${currentPoints}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            displayContent();
+
+            const increaseButton = document.getElementById('increase-score');
+            if (increaseButton) {
+                increaseButton.addEventListener('click', function() {
+                    updateScore(10);
+                });
+            }
+        });
     </script>
 </body>
 </html>
