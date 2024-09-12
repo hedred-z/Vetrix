@@ -62,13 +62,15 @@
             margin-top: 20px;
         }
 
-        /* Стили для сообщения о поддержке только мобильных устройств */
-        #desktop-content {
+        #mobile-content, #telegram-content, #non-telegram-content, #desktop-content {
             display: none;
-            font-size: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
         }
 
-        /* Стили для обеспечения отображения на весь экран на мобильных устройствах */
         @media only screen and (max-width: 767px) {
             body, html {
                 height: 100vh;
@@ -87,11 +89,11 @@
     </style>
 </head>
 <body>
-    <div id="telegram-content" class="message" style="display:none;">
+    <div id="telegram-content" class="message">
         <p class="welcome-message" id="score">Score: 0 <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/6375d6a4f61ac5030391ae2f8eda5506ffc2d867/VRX.png" alt="VP Image" class="vp-image"></p>
     </div>
 
-    <div id="non-telegram-content" class="message" style="display:none;">
+    <div id="non-telegram-content" class="message">
         <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
         <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">
             Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/6375d6a4f61ac5030391ae2f8eda5506ffc2d867/VRX.png" alt="VP Image" class="vp-image">
@@ -114,27 +116,22 @@
         function displayContent() {
             if (isMobile()) {
                 if (isTelegram()) {
-                    document.getElementById('score').textContent = `Score: ${localStorage.getItem('userPoints') || '0'}`;
+                    // Предположим, что количество очков хранится в localStorage
+                    const points = localStorage.getItem('userPoints') || '0';
+                    document.getElementById('score').textContent = `Score: ${points}`;
                     document.getElementById('telegram-content').style.display = 'block';
                     document.getElementById('non-telegram-content').style.display = 'none';
                     document.getElementById('desktop-content').style.display = 'none';
                 } else {
                     document.getElementById('telegram-content').style.display = 'none';
-                    document.getElementById('non-telegram-content').style.display = 'none';
-                    document.getElementById('desktop-content').style.display = 'block';
+                    document.getElementById('non-telegram-content').style.display = 'block';
+                    document.getElementById('desktop-content').style.display = 'none';
                 }
             } else {
                 document.getElementById('telegram-content').style.display = 'none';
                 document.getElementById('non-telegram-content').style.display = 'none';
                 document.getElementById('desktop-content').style.display = 'block';
             }
-        }
-
-        function updatePoints(amount) {
-            let points = parseInt(localStorage.getItem('userPoints')) || 0;
-            points += amount;
-            localStorage.setItem('userPoints', points);
-            document.getElementById('score').textContent = `Score: ${points}`;
         }
 
         displayContent();
