@@ -19,7 +19,7 @@
             position: relative;
         }
 
-        #mobile-content, #desktop-content, #telegram-content {
+        #desktop-content, #telegram-content, #main-menu {
             text-align: center;
             display: none;
         }
@@ -108,6 +108,16 @@
             font-size: 16px;
             display: none;
         }
+
+        #main-menu .nickname {
+            font-size: 22px;
+            margin-top: 10px;
+        }
+
+        #main-menu .points {
+            font-size: 18px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -124,14 +134,43 @@
         <p id="error-message" class="error-message">Никнейм должен содержать только латинские буквы и цифры</p>
     </div>
 
+    <div id="main-menu">
+        <img id="menu-avatar" class="avatar" src="" alt="Avatar">
+        <p id="menu-nickname" class="nickname"></p>
+        <p id="menu-points" class="points">Очки: 0</p>
+    </div>
+
     <script>
-        function checkDevice() {
+        let userData = {
+            nickname: null,
+            points: 0
+        };
+
+        function checkTelegramWebApp() {
+            // Проверяем, доступен ли объект Telegram WebApp
             if (window.Telegram.WebApp && window.Telegram.WebApp.initData) {
-                document.getElementById('telegram-content').style.display = 'block';
-                const initData = window.Telegram.WebApp.initDataUnsafe;
-                document.getElementById('avatar').src = initData.user.photo_url || '';
-                validateNickname();
+                // Включаем полноэкранный режим
+                window.Telegram.WebApp.expand();
+
+                // Если пользователь уже зарегистрирован, показываем главное меню
+                const storedData = localStorage.getItem('userData');
+                if (storedData) {
+                    userData = JSON.parse(storedData);
+                    showMainMenu();
+                } else {
+                    // Иначе показываем форму регистрации
+                    document.getElementById('telegram-content').style.display = 'block';
+                    const initData = window.Telegram.WebApp.initDataUnsafe;
+                    
+                    // Если у пользователя есть аватар, отображаем его
+                    if (initData.user && initData.user.photo_url) {
+                        document.getElementById('avatar').src = initData.user.photo_url;
+                    }
+
+                    validateNickname();
+                }
             } else {
+                // Если не в Telegram WebApp, показываем десктопную версию
                 document.getElementById('desktop-content').style.display = 'block';
             }
         }
@@ -155,9 +194,26 @@
                     errorMessage.style.display = 'block';
                 }
             });
+
+            registerButton.addEventListener('click', () => {
+                if (!registerButton.classList.contains('disabled')) {
+                    userData.nickname = nicknameInput.value.trim();
+                    userData.points = 0;
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                    showMainMenu();
+                }
+            });
         }
 
-        checkDevice();
+        function showMainMenu() {
+            document.getElementById('telegram-content').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'block';
+            document.getElementById('menu-avatar').src = document.getElementById('avatar').src;
+            document.getElementById('menu-nickname').innerText = userData.nickname;
+            document.getElementById('menu-points').innerText = `Очки: ${userData.points}`;
+        }
+
+        checkTelegramWebApp();
     </script>
 </body>
 </html>
