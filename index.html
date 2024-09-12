@@ -3,224 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация</title>
+    <title>VortixCryptoBot</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        body, html {
             margin: 0;
             padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
+            color: white;
+            position: relative;
         }
 
-        .container {
+        .message {
             text-align: center;
         }
 
-        .error {
-            color: red;
-            margin-top: 10px;
+        .welcome-message {
+            font-size: 24px;
+            margin-bottom: 20px;
         }
 
-        .input-field, .register-button, .collect-button {
-            display: block;
-            margin: 10px auto;
-            padding: 10px;
-            border-radius: 25px;
+        .button {
+            background-color: #ffffff;
+            color: black;
+            padding: 15px 40px;
+            font-size: 20px;
             border: none;
-            font-size: 16px;
+            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
         }
 
-        .input-field {
-            width: calc(100% - 20px);
-            max-width: 400px;
-            border: 1px solid #ccc;
-            background: #fff;
-            color: #000;
-        }
-
-        .register-button {
-            background-color: #ccc;
-            color: #000;
-        }
-
-        .register-button.active {
-            background-color: #fff;
-            color: #000;
-        }
-
-        .register-button.disabled {
-            cursor: not-allowed;
-        }
-
-        .collect-button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 15px 40px;
-            font-size: 20px;
-            border-radius: 50px;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .collect-button:hover {
-            background-color: #0056b3;
-            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.7);
+        .button:hover {
+            background-color: #f1f1f1;
             transform: scale(1.1);
+            box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.6);
         }
 
-        .collect-button:active {
-            transform: scale(0.9);
-        }
-
-        #avatar, #nickname-info {
-            display: none;
-        }
-
-        #main-menu {
-            display: none;
-        }
-
-        #telegram-message {
-            display: none;
-            font-size: 18px;
-            margin-top: 20px;
-        }
-
-        .currency-icon {
-            height: 20px;
+        .vp-image {
+            width: 30px;
+            height: 30px;
             vertical-align: middle;
         }
 
-        .hidden {
-            display: none;
+        #score {
+            font-size: 24px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="registration">
-        <input type="text" id="nickname" class="input-field" placeholder="NickName">
-        <button id="register-button" class="register-button" disabled>Зарегистрироваться</button>
-        <p id="error-message" class="error"></p>
+    <div id="telegram-content" class="message" style="display:none;">
+        <p class="welcome-message" id="score">Score: 0 <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" alt="VP Image" class="vp-image"></p>
     </div>
 
-    <div class="container" id="main-menu">
-        <img id="avatar" src="" alt="Avatar" style="border-radius: 50%; width: 100px; height: 100px;">
-        <h2 id="nickname-info"></h2>
-        <p id="points-info">Очки: 0 <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="Currency"></p>
-    </div>
-
-    <div class="container" id="telegram-message">
-        <p>Пожалуйста, зайдите через Telegram.</p>
-        <button id="collect-vp-button" class="collect-button">Collect VP <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="VP"></button>
+    <div id="non-telegram-content" class="message" style="display:none;">
+        <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
+        <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">
+            Collect VP <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" alt="VP Image" class="vp-image">
+        </a>
     </div>
 
     <script>
-        const registeredUsernames = JSON.parse(localStorage.getItem('usernames')) || {};
-        const userPoints = JSON.parse(localStorage.getItem('userPoints')) || {};
-        const currentUsername = localStorage.getItem('currentUsername');
-        const mainMenuDiv = document.getElementById('main-menu');
-        const registrationDiv = document.getElementById('registration');
-        const telegramMessageDiv = document.getElementById('telegram-message');
-        const nicknameInput = document.getElementById('nickname');
-        const registerButton = document.getElementById('register-button');
-        const errorMessage = document.getElementById('error-message');
-        const avatar = document.getElementById('avatar');
-        const nicknameInfo = document.getElementById('nickname-info');
-        const pointsInfo = document.getElementById('points-info');
-
         function isTelegram() {
             return /Telegram/.test(navigator.userAgent);
         }
 
-        function checkDevice() {
+        function displayContent() {
             if (isTelegram()) {
-                registrationDiv.style.display = 'block';
-                mainMenuDiv.style.display = 'none';
-                telegramMessageDiv.style.display = 'none';
-
-                if (currentUsername) {
-                    registrationDiv.style.display = 'none';
-                    mainMenuDiv.style.display = 'block';
-                    nicknameInfo.textContent = `Ваш никнейм: ${currentUsername}`;
-                    pointsInfo.innerHTML = `Очки: ${userPoints[currentUsername] || 0} <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="Currency">`;
-                    avatar.src = `https://api.adorable.io/avatars/100/${currentUsername}.png`; // Пример аватара
-                    document.getElementById('nickname-info').style.display = 'block';
-                    document.getElementById('avatar').style.display = 'block';
-                } else {
-                    registerButton.classList.remove('active');
-                    registerButton.classList.add('disabled');
-                }
-
-                nicknameInput.addEventListener('input', () => {
-                    const nickname = nicknameInput.value.trim();
-                    if (/^[a-zA-Z0-9]+$/.test(nickname) && nickname.length > 0) {
-                        if (!registeredUsernames[nickname]) {
-                            registerButton.classList.add('active');
-                            registerButton.classList.remove('disabled');
-                            errorMessage.textContent = '';
-                        } else {
-                            registerButton.classList.remove('active');
-                            registerButton.classList.add('disabled');
-                            errorMessage.textContent = 'Этот никнейм уже занят!';
-                        }
-                    } else {
-                        registerButton.classList.remove('active');
-                        registerButton.classList.add('disabled');
-                        errorMessage.textContent = 'Никнейм должен содержать только латинские буквы и цифры';
-                    }
-                });
-
-                registerButton.addEventListener('click', () => {
-                    const nickname = nicknameInput.value.trim();
-                    if (!registeredUsernames[nickname]) {
-                        registeredUsernames[nickname] = true;
-                        userPoints[nickname] = 0; // Начальное количество очков
-                        localStorage.setItem('usernames', JSON.stringify(registeredUsernames));
-                        localStorage.setItem('userPoints', JSON.stringify(userPoints));
-                        localStorage.setItem('currentUsername', nickname);
-                        registrationDiv.style.display = 'none';
-                        mainMenuDiv.style.display = 'block';
-                        nicknameInfo.textContent = `Ваш никнейм: ${nickname}`;
-                        pointsInfo.innerHTML = `Очки: ${userPoints[nickname]} <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="Currency">`;
-                        avatar.src = `https://api.adorable.io/avatars/100/${nickname}.png`; // Пример аватара
-                        document.getElementById('nickname-info').style.display = 'block';
-                        document.getElementById('avatar').style.display = 'block';
-                    }
-                });
+                // Предположим, что количество очков хранится в localStorage
+                const points = localStorage.getItem('userPoints') || '0';
+                document.getElementById('score').textContent = `Score: ${points}`;
+                document.getElementById('telegram-content').style.display = 'block';
+                document.getElementById('non-telegram-content').style.display = 'none';
             } else {
-                registrationDiv.style.display = 'none';
-                mainMenuDiv.style.display = 'none';
-                telegramMessageDiv.style.display = 'block';
+                document.getElementById('non-telegram-content').style.display = 'block';
+                document.getElementById('telegram-content').style.display = 'none';
             }
         }
 
-        // Запуск проверки после загрузки страницы
-        checkDevice();
-
-        // Функция для открытия в полноэкранном режиме (если это возможно)
-        function enterFullScreen() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                document.documentElement.msRequestFullscreen();
-            }
-        }
-
-        // Запуск полноэкранного режима при загрузке
-        enterFullScreen();
+        displayContent();
     </script>
 </body>
 </html>
