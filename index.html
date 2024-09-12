@@ -61,7 +61,6 @@
             vertical-align: middle;
         }
 
-        /* Стили для поля ввода никнейма и кнопки */
         .nickname-input {
             position: fixed;
             bottom: 80px;
@@ -114,68 +113,49 @@
 <body>
     <div id="desktop-content">
         <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
-        <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">
-            Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/main/VRX.png" alt="VP Image" class="vp-image">
-        </a>
+        <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">Collect VP 0</a>
     </div>
 
     <div id="telegram-content">
-        <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/main/VRX.png" alt="User Avatar" class="avatar" id="user-avatar">
-        <p class="welcome-message">Добро пожаловать, введите никнейм.</p>
-
-        <input type="text" id="nickname" class="nickname-input" placeholder="NickName" maxlength="20">
-        <button class="register-button disabled" id="register-btn">Зарегистрироваться</button>
-
-        <p class="error-message" id="error-message">Никнейм должен содержать только английские буквы и цифры!</p>
+        <img id="avatar" class="avatar" src="" alt="Avatar">
+        <p class="welcome-message">Введите ваш никнейм</p>
+        <input type="text" id="nickname" class="nickname-input" placeholder="NickName">
+        <button id="register-button" class="register-button disabled">Зарегистрироваться</button>
+        <p id="error-message" class="error-message">Никнейм должен содержать только латинские буквы и цифры</p>
     </div>
 
     <script>
-        // Массив для проверки уникальности никнеймов
-        const existingNicknames = ['user123', 'gamer456']; // Пример никнеймов
-
         function checkDevice() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                // Сайт открыт в Telegram, активируем Telegram UI
-                window.Telegram.WebApp.expand(); // Полноэкранный режим
+            if (window.Telegram.WebApp && window.Telegram.WebApp.initData) {
                 document.getElementById('telegram-content').style.display = 'block';
+                const initData = window.Telegram.WebApp.initDataUnsafe;
+                document.getElementById('avatar').src = initData.user.photo_url || '';
+                validateNickname();
             } else {
-                // Сайт открыт вне Telegram
                 document.getElementById('desktop-content').style.display = 'block';
             }
         }
 
-        function validateNickname(nickname) {
-            var regex = /^[a-zA-Z0-9]+$/;
-            return regex.test(nickname);
-        }
+        function validateNickname() {
+            const nicknameInput = document.getElementById('nickname');
+            const registerButton = document.getElementById('register-button');
+            const errorMessage = document.getElementById('error-message');
 
-        function checkNicknameUniqueness(nickname) {
-            return !existingNicknames.includes(nickname);
-        }
+            nicknameInput.addEventListener('input', () => {
+                const nickname = nicknameInput.value.trim();
+                const isValid = /^[a-zA-Z0-9]+$/.test(nickname);
 
-        document.getElementById('nickname').addEventListener('input', function() {
-            var nickname = document.getElementById('nickname').value;
-            var registerBtn = document.getElementById('register-btn');
-            var errorMessage = document.getElementById('error-message');
-
-            if (validateNickname(nickname)) {
-                if (checkNicknameUniqueness(nickname)) {
-                    registerBtn.classList.remove('disabled');
-                    registerBtn.classList.add('active');
+                if (isValid && nickname.length > 0) {
+                    registerButton.classList.remove('disabled');
+                    registerButton.classList.add('active');
                     errorMessage.style.display = 'none';
                 } else {
-                    registerBtn.classList.remove('active');
-                    registerBtn.classList.add('disabled');
+                    registerButton.classList.remove('active');
+                    registerButton.classList.add('disabled');
                     errorMessage.style.display = 'block';
-                    errorMessage.textContent = 'Этот никнейм уже занят!';
                 }
-            } else {
-                registerBtn.classList.remove('active');
-                registerBtn.classList.add('disabled');
-                errorMessage.style.display = 'block';
-                errorMessage.textContent = 'Никнейм должен содержать только английские буквы и цифры!';
-            }
-        });
+            });
+        }
 
         checkDevice();
     </script>
