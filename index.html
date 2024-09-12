@@ -41,6 +41,7 @@
             margin-top: 20px;
             text-decoration: none;
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
+            vertical-align: middle;
         }
 
         .button:hover {
@@ -50,14 +51,38 @@
         }
 
         .vp-image {
-            width: 20px; /* Размер изображения уменьшен */
-            height: 20px; /* Размер изображения уменьшен */
+            width: 25px;
+            height: 25px;
             vertical-align: middle;
+            margin-top: -3px;
         }
 
         #score {
             font-size: 24px;
             margin-top: 20px;
+        }
+
+        /* Стили для сообщения о поддержке только мобильных устройств */
+        #desktop-content {
+            display: none;
+            font-size: 20px;
+        }
+
+        /* Стили для обеспечения отображения на весь экран на мобильных устройствах */
+        @media only screen and (max-width: 767px) {
+            body, html {
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden;
+            }
+
+            .message {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -73,21 +98,35 @@
         </a>
     </div>
 
+    <div id="desktop-content" class="message">
+        <p>Сайт поддерживает только мобильные устройства.</p>
+    </div>
+
     <script>
         function isTelegram() {
             return /Telegram/.test(navigator.userAgent);
         }
 
+        function isMobile() {
+            return /Mobi/.test(navigator.userAgent);
+        }
+
         function displayContent() {
-            if (isTelegram()) {
-                // Предположим, что количество очков хранится в localStorage
-                const points = localStorage.getItem('userPoints') || '0';
-                document.getElementById('score').textContent = `Score: ${points}`;
-                document.getElementById('telegram-content').style.display = 'block';
-                document.getElementById('non-telegram-content').style.display = 'none';
+            if (isMobile()) {
+                if (isTelegram()) {
+                    document.getElementById('score').textContent = `Score: ${localStorage.getItem('userPoints') || '0'}`;
+                    document.getElementById('telegram-content').style.display = 'block';
+                    document.getElementById('non-telegram-content').style.display = 'none';
+                    document.getElementById('desktop-content').style.display = 'none';
+                } else {
+                    document.getElementById('telegram-content').style.display = 'none';
+                    document.getElementById('non-telegram-content').style.display = 'none';
+                    document.getElementById('desktop-content').style.display = 'block';
+                }
             } else {
-                document.getElementById('non-telegram-content').style.display = 'block';
                 document.getElementById('telegram-content').style.display = 'none';
+                document.getElementById('non-telegram-content').style.display = 'none';
+                document.getElementById('desktop-content').style.display = 'block';
             }
         }
 
@@ -97,9 +136,6 @@
             localStorage.setItem('userPoints', points);
             document.getElementById('score').textContent = `Score: ${points}`;
         }
-
-        // Пример использования updatePoints
-        // updatePoints(10); // Для добавления 10 очков
 
         displayContent();
     </script>
