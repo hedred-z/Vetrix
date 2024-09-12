@@ -30,7 +30,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .button {
@@ -59,7 +59,7 @@
         .vp-image {
             width: 20px;
             height: 20px;
-            margin-left: 5px;
+            margin-left: 4px;
         }
 
         #score {
@@ -91,7 +91,9 @@
         }
 
         function isTelegram() {
-            return /Telegram/.test(navigator.userAgent);
+            const userAgent = navigator.userAgent.toLowerCase();
+            console.log('User Agent:', userAgent); // Логируем userAgent для отладки
+            return userAgent.includes('telegram');
         }
 
         function displayContent() {
@@ -121,15 +123,12 @@
             document.getElementById('score').textContent = `Score: ${currentPoints}`;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             displayContent();
-
-            const increaseButton = document.getElementById('increase-score');
-            if (increaseButton) {
-                increaseButton.addEventListener('click', function() {
-                    updateScore(10);
-                });
-            }
+            
+            document.getElementById('increase-score').addEventListener('click', () => {
+                updateScore(1);
+            });
         });
     </script>
 </body>
