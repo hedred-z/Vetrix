@@ -50,8 +50,8 @@
         }
 
         .vp-image {
-            width: 30px;
-            height: 30px;
+            width: 20px; /* Размер изображения уменьшен */
+            height: 20px; /* Размер изображения уменьшен */
             vertical-align: middle;
         }
 
@@ -63,13 +63,13 @@
 </head>
 <body>
     <div id="telegram-content" class="message" style="display:none;">
-        <p class="welcome-message" id="score">Score: 0 <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" alt="VP Image" class="vp-image"></p>
+        <p class="welcome-message" id="score">Score: 0 <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/6375d6a4f61ac5030391ae2f8eda5506ffc2d867/VRX.png" alt="VP Image" class="vp-image"></p>
     </div>
 
     <div id="non-telegram-content" class="message" style="display:none;">
         <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
         <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">
-            Collect VP <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" alt="VP Image" class="vp-image">
+            Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/6375d6a4f61ac5030391ae2f8eda5506ffc2d867/VRX.png" alt="VP Image" class="vp-image">
         </a>
     </div>
 
@@ -90,6 +90,16 @@
                 document.getElementById('telegram-content').style.display = 'none';
             }
         }
+
+        function updatePoints(amount) {
+            let points = parseInt(localStorage.getItem('userPoints')) || 0;
+            points += amount;
+            localStorage.setItem('userPoints', points);
+            document.getElementById('score').textContent = `Score: ${points}`;
+        }
+
+        // Пример использования updatePoints
+        // updatePoints(10); // Для добавления 10 очков
 
         displayContent();
     </script>
