@@ -28,11 +28,16 @@
             margin-top: 10px;
         }
 
-        .input-field, .register-button {
+        .input-field, .register-button, .collect-button {
             display: block;
             margin: 10px auto;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 25px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
         }
 
         .input-field {
@@ -46,15 +51,34 @@
         .register-button {
             background-color: #ccc;
             color: #000;
-            cursor: not-allowed;
-            border: none;
-            font-size: 16px;
         }
 
         .register-button.active {
             background-color: #fff;
             color: #000;
-            cursor: pointer;
+        }
+
+        .register-button.disabled {
+            cursor: not-allowed;
+        }
+
+        .collect-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px 40px;
+            font-size: 20px;
+            border-radius: 50px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .collect-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.7);
+            transform: scale(1.1);
+        }
+
+        .collect-button:active {
+            transform: scale(0.9);
         }
 
         #avatar, #nickname-info {
@@ -96,7 +120,7 @@
 
     <div class="container" id="telegram-message">
         <p>Пожалуйста, зайдите через Telegram.</p>
-        <button id="collect-vp-button" class="register-button">Collect VP<sup><img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="VP"></sup></button>
+        <button id="collect-vp-button" class="collect-button">Collect VP <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="VP"></button>
     </div>
 
     <script>
@@ -127,7 +151,7 @@
                     registrationDiv.style.display = 'none';
                     mainMenuDiv.style.display = 'block';
                     nicknameInfo.textContent = `Ваш никнейм: ${currentUsername}`;
-                    pointsInfo.textContent = `Очки: ${userPoints[currentUsername] || 0}`;
+                    pointsInfo.innerHTML = `Очки: ${userPoints[currentUsername] || 0} <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="Currency">`;
                     avatar.src = `https://api.adorable.io/avatars/100/${currentUsername}.png`; // Пример аватара
                     document.getElementById('nickname-info').style.display = 'block';
                     document.getElementById('avatar').style.display = 'block';
@@ -166,7 +190,7 @@
                         registrationDiv.style.display = 'none';
                         mainMenuDiv.style.display = 'block';
                         nicknameInfo.textContent = `Ваш никнейм: ${nickname}`;
-                        pointsInfo.textContent = `Очки: ${userPoints[nickname]}`;
+                        pointsInfo.innerHTML = `Очки: ${userPoints[nickname]} <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="Currency">`;
                         avatar.src = `https://api.adorable.io/avatars/100/${nickname}.png`; // Пример аватара
                         document.getElementById('nickname-info').style.display = 'block';
                         document.getElementById('avatar').style.display = 'block';
