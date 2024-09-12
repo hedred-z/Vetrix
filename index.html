@@ -3,217 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VortixCryptoBot</title>
+    <title>Регистрация</title>
     <style>
-        body, html {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
             padding: 0;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
-            color: white;
-            position: relative;
         }
 
-        #desktop-content, #telegram-content, #main-menu {
+        .container {
             text-align: center;
-            display: none;
         }
 
-        .welcome-message {
-            font-size: 24px;
-            margin-bottom: 20px;
+        .error {
+            color: red;
+            margin-top: 10px;
         }
 
-        .button {
-            background-color: #ffffff;
-            color: black;
-            padding: 15px 40px;
-            font-size: 20px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
-        }
-
-        .button:hover {
-            background-color: #f1f1f1;
-            transform: scale(1.1);
-            box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.6);
-        }
-
-        .button-disabled {
-            background-color: grey;
-            cursor: not-allowed;
-        }
-
-        .vp-image {
-            width: 30px;
-            height: 30px;
-            vertical-align: middle;
-        }
-
-        .nickname-input {
-            position: fixed;
-            bottom: 80px;
-            width: calc(100% - 20px);
+        .input-field, .register-button {
+            display: block;
+            margin: 10px auto;
             padding: 10px;
-            font-size: 18px;
-            background-color: #f1f1f1;
-            border: none;
             border-radius: 5px;
-            color: black;
+        }
+
+        .input-field {
+            width: calc(100% - 20px);
+            max-width: 400px;
+            border: 1px solid #ccc;
+            background: #fff;
+            color: #000;
         }
 
         .register-button {
-            position: fixed;
-            bottom: 20px;
-            width: calc(100% - 20px);
-            padding: 15px;
-            font-size: 20px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .register-button.disabled {
-            background-color: grey;
+            background-color: #ccc;
+            color: #000;
             cursor: not-allowed;
+            border: none;
+            font-size: 16px;
         }
 
         .register-button.active {
-            background-color: white;
-            color: black;
+            background-color: #fff;
+            color: #000;
+            cursor: pointer;
         }
 
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-        }
-
-        .error-message {
-            color: red;
-            margin-top: 10px;
-            font-size: 16px;
+        #avatar, #nickname-info {
             display: none;
         }
 
-        #main-menu .nickname {
-            font-size: 22px;
-            margin-top: 10px;
+        #main-menu {
+            display: none;
         }
 
-        #main-menu .points {
+        #telegram-message {
+            display: none;
             font-size: 18px;
-            margin-top: 5px;
+            margin-top: 20px;
+        }
+
+        .currency-icon {
+            height: 20px;
+            vertical-align: middle;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="desktop-content">
-        <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
-        <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">Collect VP 0</a>
+    <div class="container" id="registration">
+        <input type="text" id="nickname" class="input-field" placeholder="NickName">
+        <button id="register-button" class="register-button" disabled>Зарегистрироваться</button>
+        <p id="error-message" class="error"></p>
     </div>
 
-    <div id="telegram-content">
-        <img id="avatar" class="avatar" src="" alt="Avatar">
-        <p class="welcome-message">Введите ваш никнейм</p>
-        <input type="text" id="nickname" class="nickname-input" placeholder="NickName">
-        <button id="register-button" class="register-button disabled">Зарегистрироваться</button>
-        <p id="error-message" class="error-message">Никнейм должен содержать только латинские буквы и цифры</p>
+    <div class="container" id="main-menu">
+        <img id="avatar" src="" alt="Avatar" style="border-radius: 50%; width: 100px; height: 100px;">
+        <h2 id="nickname-info"></h2>
+        <p id="points-info">Очки: 0 <img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="Currency"></p>
     </div>
 
-    <div id="main-menu">
-        <img id="menu-avatar" class="avatar" src="" alt="Avatar">
-        <p id="menu-nickname" class="nickname"></p>
-        <p id="menu-points" class="points">Очки: 0</p>
+    <div class="container" id="telegram-message">
+        <p>Пожалуйста, зайдите через Telegram.</p>
+        <button id="collect-vp-button" class="register-button">Collect VP<sup><img src="https://github.com/hedred-z/Vetrix/blob/main/VRX.png" class="currency-icon" alt="VP"></sup></button>
     </div>
 
     <script>
-        let userData = {
-            nickname: null,
-            points: 0
-        };
+        const registeredUsernames = JSON.parse(localStorage.getItem('usernames')) || {};
+        const userPoints = JSON.parse(localStorage.getItem('userPoints')) || {};
+        const currentUsername = localStorage.getItem('currentUsername');
+        const mainMenuDiv = document.getElementById('main-menu');
+        const registrationDiv = document.getElementById('registration');
+        const telegramMessageDiv = document.getElementById('telegram-message');
+        const nicknameInput = document.getElementById('nickname');
+        const registerButton = document.getElementById('register-button');
+        const errorMessage = document.getElementById('error-message');
+        const avatar = document.getElementById('avatar');
+        const nicknameInfo = document.getElementById('nickname-info');
+        const pointsInfo = document.getElementById('points-info');
 
-        function checkTelegramWebApp() {
-            // Проверяем, доступен ли объект Telegram WebApp
-            if (window.Telegram.WebApp && window.Telegram.WebApp.initData) {
-                // Включаем полноэкранный режим
-                window.Telegram.WebApp.expand();
-
-                // Если пользователь уже зарегистрирован, показываем главное меню
-                const storedData = localStorage.getItem('userData');
-                if (storedData) {
-                    userData = JSON.parse(storedData);
-                    showMainMenu();
-                } else {
-                    // Иначе показываем форму регистрации
-                    document.getElementById('telegram-content').style.display = 'block';
-                    const initData = window.Telegram.WebApp.initDataUnsafe;
-                    
-                    // Если у пользователя есть аватар, отображаем его
-                    if (initData.user && initData.user.photo_url) {
-                        document.getElementById('avatar').src = initData.user.photo_url;
-                    }
-
-                    validateNickname();
-                }
-            } else {
-                // Если не в Telegram WebApp, показываем десктопную версию
-                document.getElementById('desktop-content').style.display = 'block';
-            }
+        function isTelegram() {
+            return /Telegram/.test(navigator.userAgent);
         }
 
-        function validateNickname() {
-            const nicknameInput = document.getElementById('nickname');
-            const registerButton = document.getElementById('register-button');
-            const errorMessage = document.getElementById('error-message');
+        function checkDevice() {
+            if (isTelegram()) {
+                registrationDiv.style.display = 'block';
+                mainMenuDiv.style.display = 'none';
+                telegramMessageDiv.style.display = 'none';
 
-            nicknameInput.addEventListener('input', () => {
-                const nickname = nicknameInput.value.trim();
-                const isValid = /^[a-zA-Z0-9]+$/.test(nickname);
-
-                if (isValid && nickname.length > 0) {
-                    registerButton.classList.remove('disabled');
-                    registerButton.classList.add('active');
-                    errorMessage.style.display = 'none';
+                if (currentUsername) {
+                    registrationDiv.style.display = 'none';
+                    mainMenuDiv.style.display = 'block';
+                    nicknameInfo.textContent = `Ваш никнейм: ${currentUsername}`;
+                    pointsInfo.textContent = `Очки: ${userPoints[currentUsername] || 0}`;
+                    avatar.src = `https://api.adorable.io/avatars/100/${currentUsername}.png`; // Пример аватара
+                    document.getElementById('nickname-info').style.display = 'block';
+                    document.getElementById('avatar').style.display = 'block';
                 } else {
                     registerButton.classList.remove('active');
                     registerButton.classList.add('disabled');
-                    errorMessage.style.display = 'block';
                 }
-            });
 
-            registerButton.addEventListener('click', () => {
-                if (!registerButton.classList.contains('disabled')) {
-                    userData.nickname = nicknameInput.value.trim();
-                    userData.points = 0;
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                    showMainMenu();
-                }
-            });
+                nicknameInput.addEventListener('input', () => {
+                    const nickname = nicknameInput.value.trim();
+                    if (/^[a-zA-Z0-9]+$/.test(nickname) && nickname.length > 0) {
+                        if (!registeredUsernames[nickname]) {
+                            registerButton.classList.add('active');
+                            registerButton.classList.remove('disabled');
+                            errorMessage.textContent = '';
+                        } else {
+                            registerButton.classList.remove('active');
+                            registerButton.classList.add('disabled');
+                            errorMessage.textContent = 'Этот никнейм уже занят!';
+                        }
+                    } else {
+                        registerButton.classList.remove('active');
+                        registerButton.classList.add('disabled');
+                        errorMessage.textContent = 'Никнейм должен содержать только латинские буквы и цифры';
+                    }
+                });
+
+                registerButton.addEventListener('click', () => {
+                    const nickname = nicknameInput.value.trim();
+                    if (!registeredUsernames[nickname]) {
+                        registeredUsernames[nickname] = true;
+                        userPoints[nickname] = 0; // Начальное количество очков
+                        localStorage.setItem('usernames', JSON.stringify(registeredUsernames));
+                        localStorage.setItem('userPoints', JSON.stringify(userPoints));
+                        localStorage.setItem('currentUsername', nickname);
+                        registrationDiv.style.display = 'none';
+                        mainMenuDiv.style.display = 'block';
+                        nicknameInfo.textContent = `Ваш никнейм: ${nickname}`;
+                        pointsInfo.textContent = `Очки: ${userPoints[nickname]}`;
+                        avatar.src = `https://api.adorable.io/avatars/100/${nickname}.png`; // Пример аватара
+                        document.getElementById('nickname-info').style.display = 'block';
+                        document.getElementById('avatar').style.display = 'block';
+                    }
+                });
+            } else {
+                registrationDiv.style.display = 'none';
+                mainMenuDiv.style.display = 'none';
+                telegramMessageDiv.style.display = 'block';
+            }
         }
 
-        function showMainMenu() {
-            document.getElementById('telegram-content').style.display = 'none';
-            document.getElementById('main-menu').style.display = 'block';
-            document.getElementById('menu-avatar').src = document.getElementById('avatar').src;
-            document.getElementById('menu-nickname').innerText = userData.nickname;
-            document.getElementById('menu-points').innerText = `Очки: ${userData.points}`;
+        // Запуск проверки после загрузки страницы
+        checkDevice();
+
+        // Функция для открытия в полноэкранном режиме (если это возможно)
+        function enterFullScreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
+            }
         }
 
-        checkTelegramWebApp();
+        // Запуск полноэкранного режима при загрузке
+        enterFullScreen();
     </script>
 </body>
 </html>
