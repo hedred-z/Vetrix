@@ -97,7 +97,7 @@
         function displayContent() {
             if (isMobile()) {
                 if (isTelegramWebApp()) {
-                    window.Telegram.WebApp.initDataUnsafe; // Инициализация Web App
+                    window.Telegram.WebApp.ready(); // Инициализация WebApp
                     const points = localStorage.getItem('userPoints') || '0';
                     document.getElementById('score').textContent = `Score: ${points}`;
                     document.getElementById('telegram-content').style.display = 'block';
