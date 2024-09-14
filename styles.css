@@ -1,0 +1,74 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+}
+
+#telegram-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+#user-avatar {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+#score {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.vp-image {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+#start-farming {
+    background-color: #ffffff;
+    color: black;
+    padding: 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#start-farming:hover {
+    background-color: #f0f0f0;
+}
+
+#start-farming:active {
+    transform: scale(0.95);
+}
+
+#farm-status {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+}
+
+#farming-score {
+    font-size: 24px;
+}
+
+#remaining-time {
+    font-size: 20px;
+    margin-top: 10px;
+}
