@@ -49,12 +49,13 @@
         .vp-image {
             width: 20px;
             height: 20px;
-            margin-left: 5px;
+            margin-left: 0px;
             vertical-align: middle;
         }
         .button span {
             display: inline-block;
             vertical-align: middle;
+            margin-top: 0px;
         }
         #score {
             font-size: 20px;
@@ -79,42 +80,34 @@
             return window.Telegram && window.Telegram.WebApp;
         }
 
-        function isMobile() {
-            return /Mobi|Android/i.test(navigator.userAgent) || /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        }
-
-        function isTelegramMobile() {
-            return isMobile() && isTelegramWebApp();
-        }
-
         async function displayContent() {
-            if (isTelegramMobile()) {
+            if (isTelegramWebApp()) {
                 window.Telegram.WebApp.ready(); // Инициализация WebApp
+                document.getElementById('telegram-content').style.display = 'block';
+                document.getElementById('collect-vp-button').style.display = 'none';
+                document.getElementById('message').textContent = '';
+                console.log('Web App is running in Telegram.');
+                
+                // Получение данных о пользователе, если необходимо
                 const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
                 try {
                     const response = await fetch(`https://yourserver.com/get_points?user_id=${userId}`);
                     const data = await response.json();
                     document.getElementById('score').textContent = `Score: ${data.points}`;
-                    document.getElementById('telegram-content').style.display = 'block';
-                    document.getElementById('collect-vp-button').style.display = 'none';
-                    document.getElementById('message').textContent = '';
                 } catch (error) {
                     console.error('Error fetching points:', error);
                     document.getElementById('message').textContent = 'Ошибка загрузки данных.';
                 }
-            } else if (isMobile()) {
+            } else {
                 document.getElementById('collect-vp-button').style.display = 'block';
                 document.getElementById('telegram-content').style.display = 'none';
                 document.getElementById('message').textContent = 'Пожалуйста, зайдите через Telegram.';
-            } else {
-                document.getElementById('message').textContent = 'Этот сайт поддерживается только на мобильных устройствах.';
-                document.getElementById('collect-vp-button').style.display = 'none';
-                document.getElementById('telegram-content').style.display = 'none';
+                console.log('Web App is running outside Telegram.');
             }
         }
 
         async function updateScore(increaseAmount) {
-            if (isTelegramMobile()) {
+            if (isTelegramWebApp()) {
                 let userId = window.Telegram.WebApp.initDataUnsafe.user.id;
                 try {
                     const response = await fetch(`https://yourserver.com/update_score`, {
@@ -132,14 +125,11 @@
                 } catch (error) {
                     console.error('Error updating score:', error);
                 }
-            } else {
-                document.getElementById('message').textContent = 'Этот функционал доступен только в Telegram.';
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             displayContent();
-
             document.getElementById('increase-score').addEventListener('click', () => {
                 updateScore(1);
             });
