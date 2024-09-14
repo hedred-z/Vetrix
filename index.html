@@ -91,9 +91,7 @@
         }
 
         function isTelegram() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            console.log('User Agent:', userAgent); // Логируем userAgent для отладки
-            return userAgent.includes('telegram');
+            return window.Telegram && window.Telegram.WebApp;
         }
 
         function displayContent() {
