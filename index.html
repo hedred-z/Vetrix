@@ -88,14 +88,21 @@
             return isMobile() && isTelegramWebApp();
         }
 
-        function displayContent() {
+        async function displayContent() {
             if (isTelegramMobile()) {
                 window.Telegram.WebApp.ready(); // Инициализация WebApp
-                const points = localStorage.getItem('userPoints') || '0';
-                document.getElementById('score').textContent = `Score: ${points}`;
-                document.getElementById('telegram-content').style.display = 'block';
-                document.getElementById('collect-vp-button').style.display = 'none';
-                document.getElementById('message').textContent = '';
+                const userId = window.Telegram.WebApp.initDataUnsafe.user.id;
+                try {
+                    const response = await fetch(`https://yourserver.com/get_points?user_id=${userId}`);
+                    const data = await response.json();
+                    document.getElementById('score').textContent = `Score: ${data.points}`;
+                    document.getElementById('telegram-content').style.display = 'block';
+                    document.getElementById('collect-vp-button').style.display = 'none';
+                    document.getElementById('message').textContent = '';
+                } catch (error) {
+                    console.error('Error fetching points:', error);
+                    document.getElementById('message').textContent = 'Ошибка загрузки данных.';
+                }
             } else if (isMobile()) {
                 document.getElementById('collect-vp-button').style.display = 'block';
                 document.getElementById('telegram-content').style.display = 'none';
@@ -107,11 +114,24 @@
             }
         }
 
-        function updateScore(increaseAmount) {
-            let currentPoints = parseInt(localStorage.getItem('userPoints') || '0', 10);
-            currentPoints += increaseAmount;
-            localStorage.setItem('userPoints', currentPoints);
-            document.getElementById('score').textContent = `Score: ${currentPoints}`;
+        async function updateScore(increaseAmount) {
+            let userId = window.Telegram.WebApp.initDataUnsafe.user.id;
+            try {
+                const response = await fetch(`https://yourserver.com/update_score`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        increase_amount: increaseAmount
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('score').textContent = `Score: ${data.new_points}`;
+            } catch (error) {
+                console.error('Error updating score:', error);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
