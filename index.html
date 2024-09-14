@@ -14,7 +14,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
             color: white;
             text-align: center;
         }
@@ -24,10 +23,6 @@
         .welcome-message {
             font-size: 20px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
         }
         .button {
             background-color: #ffffff;
@@ -62,20 +57,15 @@
     </style>
 </head>
 <body>
-    <div id="desktop-content" class="message" style="display:none;">
-        <p class="welcome-message">Этот сайт поддерживается только на мобильных устройствах.</p>
-    </div>
-
-    <div id="non-telegram-content" class="message" style="display:none;">
-        <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
-        <a id="collect-vp-button" href="https://t.me/VortixCryptoBot" target="_blank" class="button">
+    <div id="content" class="message">
+        <p class="welcome-message" id="message">Loading...</p>
+        <div id="telegram-content" style="display:none;">
+            <p id="score">Score: 0 <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image"></p>
+            <button id="increase-score" class="button">Increase Score</button>
+        </div>
+        <a id="collect-vp-button" href="https://t.me/VortixCryptoBot" target="_blank" class="button" style="display:none;">
             Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image">
         </a>
-    </div>
-
-    <div id="telegram-content" class="message" style="display:none;">
-        <p class="welcome-message" id="score">Score: 0 <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image"></p>
-        <button id="increase-score" class="button">Increase Score</button>
     </div>
 
     <script>
@@ -88,22 +78,20 @@
         }
 
         function displayContent() {
-            if (isMobile()) {
-                if (isTelegramWebApp()) {
-                    window.Telegram.WebApp.ready();
-                    const points = localStorage.getItem('userPoints') || '0';
-                    document.getElementById('score').textContent = `Score: ${points}`;
-                    document.getElementById('telegram-content').style.display = 'block';
-                    document.getElementById('non-telegram-content').style.display = 'none';
-                    document.getElementById('desktop-content').style.display = 'none';
-                } else {
-                    document.getElementById('non-telegram-content').style.display = 'block';
-                    document.getElementById('telegram-content').style.display = 'none';
-                    document.getElementById('desktop-content').style.display = 'none';
-                }
+            if (isTelegramWebApp()) {
+                window.Telegram.WebApp.ready(); // Инициализация WebApp
+                const points = localStorage.getItem('userPoints') || '0';
+                document.getElementById('score').textContent = `Score: ${points}`;
+                document.getElementById('telegram-content').style.display = 'block';
+                document.getElementById('collect-vp-button').style.display = 'none';
+                document.getElementById('message').textContent = '';
+            } else if (isMobile()) {
+                document.getElementById('collect-vp-button').style.display = 'block';
+                document.getElementById('telegram-content').style.display = 'none';
+                document.getElementById('message').textContent = 'Пожалуйста, зайдите через Telegram.';
             } else {
-                document.getElementById('desktop-content').style.display = 'block';
-                document.getElementById('non-telegram-content').style.display = 'none';
+                document.getElementById('message').textContent = 'Этот сайт поддерживается только на мобильных устройствах.';
+                document.getElementById('collect-vp-button').style.display = 'none';
                 document.getElementById('telegram-content').style.display = 'none';
             }
         }
