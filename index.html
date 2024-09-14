@@ -48,29 +48,11 @@
             text-decoration: none;
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
             margin-top: 20px;
-            animation: none;
+            overflow: hidden;
         }
 
-        .button:hover {
-            background-color: #f1f1f1;
-            transform: scale(1.05);
-            box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.6);
-        }
-
-        .button.animate {
-            animation: buttonAnimation 0.6s forwards;
-        }
-
-        @keyframes buttonAnimation {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
+        .button:active {
+            transform: scale(1.2);
         }
 
         .vp-image {
@@ -103,17 +85,17 @@
     </div>
 
     <script>
+        function isTelegramWebApp() {
+            return window.Telegram && window.Telegram.WebApp;
+        }
+
         function isMobile() {
             return /Mobi|Android/i.test(navigator.userAgent);
         }
 
-        function isTelegram() {
-            return window.Telegram && window.Telegram.WebApp;
-        }
-
         function displayContent() {
             if (isMobile()) {
-                if (isTelegram()) {
+                if (isTelegramWebApp()) {
                     const points = localStorage.getItem('userPoints') || '0';
                     document.getElementById('score').textContent = `Score: ${points}`;
                     document.getElementById('telegram-content').style.display = 'block';
@@ -143,14 +125,6 @@
             
             document.getElementById('increase-score').addEventListener('click', () => {
                 updateScore(1);
-            });
-
-            const collectButton = document.getElementById('collect-vp-button');
-            collectButton.addEventListener('click', () => {
-                collectButton.classList.add('animate');
-                setTimeout(() => {
-                    collectButton.classList.remove('animate');
-                }, 600); // Длительность анимации
             });
         });
     </script>
