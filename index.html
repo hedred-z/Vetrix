@@ -41,7 +41,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.1s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -49,16 +49,11 @@
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
             margin-top: 20px;
             overflow: hidden;
-            position: relative;
             white-space: nowrap;
         }
 
         .button:active {
             transform: scale(0.9);
-        }
-
-        .button.enlarged {
-            transform: scale(1.2);
         }
 
         .vp-image {
@@ -132,10 +127,10 @@
             const button = document.getElementById('collect-vp-button');
             
             button.addEventListener('click', () => {
-                button.classList.add('enlarged');
+                button.classList.add('clicked');
                 setTimeout(() => {
-                    button.classList.remove('enlarged');
-                }, 3000); // Кнопка будет большой 3 секунды
+                    button.classList.remove('clicked');
+                }, 300); // Кнопка будет уменьшенной 0.3 секунды
             });
 
             document.getElementById('increase-score').addEventListener('click', () => {
