@@ -16,14 +16,11 @@
             align-items: center;
             overflow: hidden;
             color: white;
-            position: relative;
             text-align: center;
         }
-
         .message {
             text-align: center;
         }
-
         .welcome-message {
             font-size: 20px;
             margin-bottom: 20px;
@@ -32,7 +29,6 @@
             justify-content: center;
             gap: 4px;
         }
-
         .button {
             background-color: #ffffff;
             color: black;
@@ -51,17 +47,14 @@
             overflow: hidden;
             white-space: nowrap;
         }
-
         .button:active {
             transform: scale(0.9);
         }
-
         .vp-image {
             width: 20px;
             height: 20px;
             margin-left: 4px;
         }
-
         #score {
             font-size: 20px;
             margin-top: 20px;
@@ -97,7 +90,7 @@
         function displayContent() {
             if (isMobile()) {
                 if (isTelegramWebApp()) {
-                    window.Telegram.WebApp.ready(); // Инициализация WebApp
+                    window.Telegram.WebApp.ready();
                     const points = localStorage.getItem('userPoints') || '0';
                     document.getElementById('score').textContent = `Score: ${points}`;
                     document.getElementById('telegram-content').style.display = 'block';
@@ -124,15 +117,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             displayContent();
-            
-            const button = document.getElementById('collect-vp-button');
-            
-            button.addEventListener('click', () => {
-                button.classList.add('clicked');
-                setTimeout(() => {
-                    button.classList.remove('clicked');
-                }, 300); // Кнопка будет уменьшенной 0.3 секунды
-            });
 
             document.getElementById('increase-score').addEventListener('click', () => {
                 updateScore(1);
