@@ -1,40 +1,60 @@
-let score = 0;
-const totalPoints = 50;
-const farmingDuration = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
-const farmingStartTime = Date.now();
-const scoreIncrementPerSecond = totalPoints / (farmingDuration / 1000);
-const farmingEndTime = farmingStartTime + farmingDuration;
+document.addEventListener('DOMContentLoaded', () => {
+  const contents = document.querySelectorAll('.content');
+  const buttons = {
+    'home-btn': 'home-content',
+    'leaderboard-btn': 'leaderboard-content',
+    'interesting-btn': 'interesting-content',
+    'referral-btn': 'referral-content',
+    'tasks-btn': 'tasks-content'
+  };
 
-const startFarmingButton = document.getElementById('start-farming');
-const farmingScoreElem = document.getElementById('farming-score');
-const remainingTimeElem = document.getElementById('remaining-time');
-const telegramContentElem = document.getElementById('telegram-content');
-const farmStatusElem = document.getElementById('farm-status');
+  const tapLimit = 100;
+  let tapCount = 0;
 
-startFarmingButton.addEventListener('click', () => {
-    startFarmingButton.disabled = true;
-    startFarmingButton.style.backgroundColor = '#cccccc';
-    telegramContentElem.style.display = 'none';
-    farmStatusElem.style.display = 'block';
+  function showContent(id) {
+    contents.forEach(content => content.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  }
 
-    const updateFarmingStatus = () => {
-        const now = Date.now();
-        const remainingTime = Math.max(0, farmingEndTime - now);
-        const remainingSeconds = Math.floor(remainingTime / 1000);
-        const remainingHours = Math.floor(remainingSeconds / 3600);
-        const remainingMinutes = Math.floor((remainingSeconds % 3600) / 60);
-        const remainingSecondsDisplay = remainingSeconds % 60;
+  Object.keys(buttons).forEach(buttonId => {
+    document.getElementById(buttonId).addEventListener('click', () => {
+      showContent(buttons[buttonId]);
+    });
+  });
 
-        remainingTimeElem.textContent = `Remaining Time: ${remainingHours}:${remainingMinutes.toString().padStart(2, '0')}:${remainingSecondsDisplay.toString().padStart(2, '0')}`;
+  showContent('home-content');
 
-        if (remainingTime > 0) {
-            score += scoreIncrementPerSecond;
-            farmingScoreElem.textContent = `Score: ${Math.min(score.toFixed(2), totalPoints)}`;
-            setTimeout(updateFarmingStatus, 1000);
-        } else {
-            farmingScoreElem.textContent = `Score: ${totalPoints}`;
-        }
-    };
+  document.getElementById('currency-img').addEventListener('click', () => {
+    if (tapCount < tapLimit) {
+      tapCount++;
+      document.getElementById('tap-count').textContent = `Тапов сегодня: ${tapCount} / ${tapLimit}`;
+      fetch('http://localhost:3000/update-coins', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: 'user1', coins: 0.01 })
+      }).then(response => response.json())
+        .then(data => console.log('Coins updated:', data))
+        .catch(error => console.error('Error:', error));
+    }
+  });
 
-    updateFarmingStatus();
+  // Fetch leaderboard
+  fetch('http://localhost:3000/leaderboard')
+    .then(response => response.json())
+    .then(data => {
+      const leaderboard = document.getElementById('leaderboard');
+      data.forEach((user, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        item.innerHTML = `
+          <span class="leaderboard-position">${index + 1}</span>
+          <span>${user.username}</span>
+          <span>${user.coins.toFixed(2)}</span>
+        `;
+        leaderboard.appendChild(item);
+      });
+    })
+    .catch(error => console.error('Error:', error));
 });
