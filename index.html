@@ -39,9 +39,23 @@
             text-decoration: none;
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
             margin-top: 20px;
+            overflow: hidden;
+            white-space: nowrap;
+            line-height: 0;
         }
         .button:active {
             transform: scale(0.9);
+        }
+        .vp-image {
+            width: 20px;
+            height: 20px;
+            margin-left: 0px;
+            vertical-align: middle;
+        }
+        .button span {
+            display: inline-block;
+            vertical-align: middle;
+            margin-top: 0px;
         }
         #score {
             font-size: 20px;
@@ -53,12 +67,13 @@
     <div id="content" class="message">
         <p class="welcome-message" id="message">Loading...</p>
         <div id="telegram-content" style="display:none;">
-            <p id="score">Score: 0</p>
+            <p id="score">Score: 0 <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image"></p>
             <button id="increase-score" class="button">Increase Score</button>
         </div>
         <a id="collect-vp-button" href="https://t.me/VortixCryptoBot" target="_blank" class="button" style="display:none;">
-            <span>Collect VP</span>
+            <span>Collect VP</span> <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image">
         </a>
+        <p id="mobile-warning" style="display:none;">Этот сайт доступен только на мобильных устройствах.</p>
     </div>
 
     <script>
@@ -66,26 +81,37 @@
             return window.Telegram && window.Telegram.WebApp;
         }
 
-        function displayContent() {
+        function isMobile() {
+            return /Mobi|Android/i.test(navigator.userAgent);
+        }
+
+        async function displayContent() {
             if (isTelegramWebApp()) {
                 window.Telegram.WebApp.ready(); // Инициализация WebApp
                 document.getElementById('telegram-content').style.display = 'block';
                 document.getElementById('collect-vp-button').style.display = 'none';
+                document.getElementById('mobile-warning').style.display = 'none';
                 document.getElementById('message').textContent = '';
-
-                // Установка начального значения счета
-                document.getElementById('score').textContent = 'Score: 0';
-            } else {
+                console.log('Web App is running in Telegram.');
+            } else if (isMobile()) {
                 document.getElementById('collect-vp-button').style.display = 'block';
                 document.getElementById('telegram-content').style.display = 'none';
+                document.getElementById('mobile-warning').style.display = 'none';
                 document.getElementById('message').textContent = 'Пожалуйста, зайдите через Telegram.';
+                console.log('Web App is running on mobile browser.');
+            } else {
+                document.getElementById('collect-vp-button').style.display = 'none';
+                document.getElementById('telegram-content').style.display = 'none';
+                document.getElementById('mobile-warning').style.display = 'block';
+                document.getElementById('message').textContent = 'Этот сайт доступен только на мобильных устройствах.';
+                console.log('Web App is running on desktop.');
             }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             displayContent();
             document.getElementById('increase-score').addEventListener('click', () => {
-                // Увеличение очков
+                // Обновление счета без обращения к серверу
                 let scoreElement = document.getElementById('score');
                 let currentScore = parseInt(scoreElement.textContent.split(': ')[1]);
                 scoreElement.textContent = `Score: ${currentScore + 1}`;
