@@ -49,9 +49,15 @@
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
             margin-top: 20px;
             overflow: hidden;
+            position: relative;
+            white-space: nowrap;
         }
 
         .button:active {
+            transform: scale(0.9);
+        }
+
+        .button.enlarged {
             transform: scale(1.2);
         }
 
@@ -90,7 +96,7 @@
         }
 
         function isMobile() {
-            return /Mobi|Android/i.test(navigator.userAgent);
+            return /Mobi|Android/i.test(navigator.userAgent) || /iPhone|iPad|iPod/i.test(navigator.userAgent);
         }
 
         function displayContent() {
@@ -123,6 +129,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             displayContent();
             
+            const button = document.getElementById('collect-vp-button');
+            
+            button.addEventListener('click', () => {
+                button.classList.add('enlarged');
+                setTimeout(() => {
+                    button.classList.remove('enlarged');
+                }, 3000); // Кнопка будет большой 3 секунды
+            });
+
             document.getElementById('increase-score').addEventListener('click', () => {
                 updateScore(1);
             });
