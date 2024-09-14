@@ -48,12 +48,29 @@
             text-decoration: none;
             box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.4);
             margin-top: 20px;
+            animation: none;
         }
 
         .button:hover {
             background-color: #f1f1f1;
             transform: scale(1.05);
             box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .button.animate {
+            animation: buttonAnimation 0.6s forwards;
+        }
+
+        @keyframes buttonAnimation {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         .vp-image {
@@ -74,8 +91,8 @@
     </div>
 
     <div id="non-telegram-content" class="message" style="display:none;">
-        <p class="welcome-message">Пожалуйста, зайдите через Telegram.1</p>
-        <a href="https://t.me/VortixCryptoBot" target="_blank" class="button">
+        <p class="welcome-message">Пожалуйста, зайдите через Telegram.</p>
+        <a id="collect-vp-button" href="https://t.me/VortixCryptoBot" target="_blank" class="button">
             Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image">
         </a>
     </div>
@@ -126,6 +143,14 @@
             
             document.getElementById('increase-score').addEventListener('click', () => {
                 updateScore(1);
+            });
+
+            const collectButton = document.getElementById('collect-vp-button');
+            collectButton.addEventListener('click', () => {
+                collectButton.classList.add('animate');
+                setTimeout(() => {
+                    collectButton.classList.remove('animate');
+                }, 600); // Длительность анимации
             });
         });
     </script>
