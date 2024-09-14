@@ -41,6 +41,7 @@
             margin-top: 20px;
             overflow: hidden;
             white-space: nowrap;
+            line-height: 0; /* Выровнять текст по вертикали */
         }
         .button:active {
             transform: scale(0.9);
@@ -48,7 +49,13 @@
         .vp-image {
             width: 20px;
             height: 20px;
-            margin-left: 4px;
+            margin-left: 0px;
+            vertical-align: middle;
+        }
+        .button span {
+            display: inline-block;
+            vertical-align: middle;
+            margin-top: 0px; /* Поднять текст немного выше */
         }
         #score {
             font-size: 20px;
@@ -64,7 +71,7 @@
             <button id="increase-score" class="button">Increase Score</button>
         </div>
         <a id="collect-vp-button" href="https://t.me/VortixCryptoBot" target="_blank" class="button" style="display:none;">
-            Collect VP <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image">
+            <span>Collect VP</span> <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="VP Image" class="vp-image">
         </a>
     </div>
 
@@ -77,8 +84,12 @@
             return /Mobi|Android/i.test(navigator.userAgent) || /iPhone|iPad|iPod/i.test(navigator.userAgent);
         }
 
+        function isTelegramMobile() {
+            return isMobile() && isTelegramWebApp();
+        }
+
         function displayContent() {
-            if (isTelegramWebApp()) {
+            if (isTelegramMobile()) {
                 window.Telegram.WebApp.ready(); // Инициализация WebApp
                 const points = localStorage.getItem('userPoints') || '0';
                 document.getElementById('score').textContent = `Score: ${points}`;
