@@ -58,6 +58,7 @@
       width: 20px;
       height: 20px;
       margin-right: 5px;
+      filter: brightness(0) invert(1); /* Изменение цвета иконки молнии на белый */
     }
 
     .bottom-menu {
@@ -107,7 +108,7 @@
       <div>
         <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()" oncontextmenu="return false;">
         <div class="energy-counter">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Lightning_bolt_icon.svg" alt="Energy" id="energy-icon"> <!-- Иконка молнии -->
+          <img src="https://cdn-icons-png.flaticon.com/512/2682/2682835.png" alt="Energy" id="energy-icon"> <!-- Иконка молнии -->
           <span id="energy-count">1000 / 1000</span>
         </div>
       </div>
@@ -127,11 +128,9 @@
     const maxEnergy = 1000;
     const currencyImg = document.getElementById('currency-img');
     const energyCount = document.getElementById('energy-count');
-    const energyIcon = document.getElementById('energy-icon');
 
     function updateEnergyDisplay() {
       energyCount.innerText = `${energy} / ${maxEnergy}`;
-      energyIcon.style.height = `${(energy / maxEnergy) * 20}px`;
       localStorage.setItem('energy', energy); // Сохраняем текущее значение энергии
     }
 
@@ -165,7 +164,7 @@
           <div>
             <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()" oncontextmenu="return false;">
             <div class="energy-counter">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Lightning_bolt_icon.svg" alt="Energy" id="energy-icon">
+              <img src="https://cdn-icons-png.flaticon.com/512/2682/2682835.png" alt="Energy" id="energy-icon">
               <span id="energy-count">${energy} / ${maxEnergy}</span>
             </div>
           </div>
@@ -182,6 +181,10 @@
       // Обновляем счетчик энергии для новой страницы
       if (page === 'home') {
         updateEnergyDisplay(); // Обновляем отображение энергии
+      } else {
+        // При переходе на другие страницы, сохраняем текущее значение энергии
+        const currentEnergy = localStorage.getItem('energy');
+        energy = parseInt(currentEnergy) || 1000; // Если ничего нет, ставим 1000
       }
 
       // Убираем активный класс у всех кнопок
