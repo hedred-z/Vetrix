@@ -108,7 +108,7 @@
   <div class="container">
     <main id="main-content">
       <div>
-        <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()" oncontextmenu="return false;">
+        <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
         <div class="energy-counter">
           <img src="https://cdn-icons-png.flaticon.com/512/2682/2682835.png" alt="Energy" id="energy-icon"> <!-- Иконка молнии -->
           <span id="energy-count">1000 / 1000</span>
@@ -160,11 +160,19 @@
       }
     }
 
+    // Запрос текущего баланса энергии с сервера
+    function fetchEnergyFromServer() {
+      // Заглушка для сервера, замените на ваш реальный AJAX-запрос
+      const simulatedEnergy = Math.floor(Math.random() * (maxEnergy + 1));
+      energy = simulatedEnergy;
+      updateEnergyDisplay();
+    }
+
     function showContent(page, element) {
       const content = {
         home: `
           <div>
-            <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()" oncontextmenu="return false;">
+            <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
             <div class="energy-counter">
               <img src="https://cdn-icons-png.flaticon.com/512/2682/2682835.png" alt="Energy" id="energy-icon">
               <span id="energy-count">${energy} / ${maxEnergy}</span>
@@ -208,6 +216,9 @@
 
     // Восстановление энергии каждую секунду
     setInterval(restoreEnergy, 1000);
+
+    // Запрос текущего баланса энергии каждую секунду
+    setInterval(fetchEnergyFromServer, 1000);
 
     // Обновление отображения энергии при загрузке
     updateEnergyDisplay();
