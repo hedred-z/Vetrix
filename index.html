@@ -10,48 +10,17 @@
 <body>
   <div class="container">
     <main id="main-content">
-      <div id="home-content" class="content">
-        <h1>Главный Объект</h1>
-        <p>Нажмите на изображение валюты, чтобы получить очки. Ограничение на 100 тапов в день.</p>
-        <div id="currency-container">
-          <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/5520b24102966c5088ef1374f193cfdbd20d5d10/VRX.png" alt="Currency" id="currency-img">
-          <p id="tap-count">Тапов сегодня: 0 / 100</p>
-        </div>
-      </div>
-      <div id="leaderboard-content" class="content hidden">
-        <h1>Рейтинг</h1>
-        <div id="leaderboard"></div>
-      </div>
-      <div id="interesting-content" class="content hidden">
-        <h1>Интересное</h1>
-        <p>Подписывайтесь на наш Telegram-канал для получения последних новостей:</p>
-        <a href="https://t.me/VortixCrypto" target="_blank">Перейти в канал</a>
-        <div id="posts-container"></div>
-      </div>
-      <div id="referral-content" class="content hidden">
-        <h1>Реферальная Ссылка</h1>
-        <p>Создайте реферальную ссылку и получите процент от заработка других игроков.</p>
-        <button id="generate-referral-link">Создать реферальную ссылку</button>
-        <p id="referral-link"></p>
-        <p>Ваш процент от заработка друзей: <span id="referral-percentage">0%</span></p>
-      </div>
-      <div id="tasks-content" class="content hidden">
-        <h1>Задания</h1>
-        <ul>
-          <li>Задание 1: Нажмите на валюту 50 раз</li>
-          <li>Задание 2: Подпишитесь на наш Telegram-канал</li>
-          <li>Задание 3: Пригласите друга</li>
-        </ul>
-      </div>
+      <h1>Главная страница</h1>
+      <p>Добро пожаловать на главную страницу!</p>
     </main>
+    
     <footer class="bottom-menu">
-      <button id="leaderboard-btn"><i class="fas fa-trophy"></i></button>
-      <button id="interesting-btn"><i class="fas fa-star"></i></button>
-      <button id="home-btn"><i class="fas fa-home"></i></button>
-      <button id="referral-btn"><i class="fas fa-link"></i></button>
-      <button id="tasks-btn"><i class="fas fa-tasks"></i></button>
+      <a href="leaderboard.html"><button><i class="fas fa-trophy"></i></button></a>
+      <a href="interesting.html"><button><i class="fas fa-star"></i></button></a>
+      <a href="index.html"><button><i class="fas fa-home"></i></button></a>
+      <a href="referral.html"><button><i class="fas fa-link"></i></button></a>
+      <a href="tasks.html"><button><i class="fas fa-tasks"></i></button></a>
     </footer>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
