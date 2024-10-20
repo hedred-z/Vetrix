@@ -13,8 +13,8 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
-      overflow: hidden; /* Запрет прокрутки */
-      user-select: none; /* Запрет выделения текста */
+      overflow: hidden;
+      user-select: none;
     }
 
     .container {
@@ -22,85 +22,66 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      padding: 20px;
     }
 
     main {
       flex-grow: 1;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       position: relative;
-      text-align: center; /* Центрирование текста */
+      text-align: center;
     }
 
-    #currency-img {
-      width: 200px;
-      height: 200px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      user-select: none; /* Запрет выделения текста при нажатии на изображение */
-      outline: none; /* Убираем обводку */
-    }
-
-    #currency-img:active {
-      transform: scale(0.9);
-    }
-
-    .energy-counter {
-      position: absolute;
-      top: 20px; /* Положение выше */
-      left: 20px; /* Слева */
-      color: #fff;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-    }
-
-    .energy-counter img {
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
-      filter: brightness(0) invert(1); /* Изменение цвета иконки молнии на белый */
-    }
-
-    .bottom-menu {
-      display: flex;
-      justify-content: space-around;
-      background-color: #111;
-      padding: 10px 0;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-
-    .bottom-menu button {
-      background: none;
+    .start-button {
+      width: 100%;
+      height: 60px;
+      background-color: white;
+      color: black;
       border: none;
-      color: #fff;
+      border-radius: 10px;
       font-size: 24px;
-      transition: transform 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.3s ease;
+      overflow: hidden;
     }
 
-    .bottom-menu button:focus {
-      outline: none;
+    .start-button:hover {
+      background-color: lightgray;
     }
 
-    .bottom-menu button:hover {
-      color: #888;
+    .timer {
+      position: absolute;
+      bottom: 80px;
+      right: 20px;
+      color: white;
+      font-size: 20px;
     }
 
-    .bottom-menu button.active {
-      transform: scale(1.3);
-      color: #fff;
+    .balance {
+      position: absolute;
+      top: 20px;
+      color: white;
+      font-size: 20px;
+    }
+
+    .farming-button {
+      position: relative;
+      transition: background-color 0.5s, width 0.5s;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, #4caf50 0%, #4caf50 0%, #333 0%);
+      border-radius: 10px;
+      transition: width 0.5s;
     }
 
     .hidden {
       display: none;
-    }
-
-    .active-content {
-      display: block;
     }
   </style>
 </head>
@@ -108,14 +89,15 @@
   <div class="container">
     <main id="main-content">
       <div>
-        <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
-        <div class="energy-counter">
-          <img src="https://cdn-icons-png.flaticon.com/512/2682/2682835.png" alt="Energy" id="energy-icon"> <!-- Иконка молнии -->
-          <span id="energy-count">1000 / 1000</span>
-        </div>
+        <h1 style="color: white;">Главное меню</h1>
       </div>
+      <div class="balance" id="balance-display">Баланс: 0 / 100</div>
+      <button class="start-button" id="start-farming-btn">
+        <span class="farming-button">Start Farming</span>
+        <div class="progress-bar" id="progress-bar"></div>
+      </button>
+      <div class="timer hidden" id="timer-display">6:00:00</div>
     </main>
-
     <footer class="bottom-menu">
       <button id="leaderboard-btn" onclick="showContent('leaderboard', this)"><i class="fas fa-trophy"></i></button>
       <button id="interesting-btn" onclick="showContent('interesting', this)"><i class="fas fa-star"></i></button>
@@ -126,102 +108,74 @@
   </div>
 
   <script>
-    let energy = parseInt(localStorage.getItem('energy')) || 1000;
-    const maxEnergy = 1000;
-    const currencyImg = document.getElementById('currency-img');
-    const energyCount = document.getElementById('energy-count');
+    let timerInterval;
+    let totalSeconds = 21600; // 6 hours
+    let earnedPoints = 0;
 
-    function updateEnergyDisplay() {
-      energyCount.innerText = `${energy} / ${maxEnergy}`;
-      localStorage.setItem('energy', energy); // Сохраняем текущее значение энергии
+    function startFarming() {
+      const startButton = document.getElementById('start-farming-btn');
+      const timerDisplay = document.getElementById('timer-display');
+      const progressBar = document.getElementById('progress-bar');
+      const balanceDisplay = document.getElementById('balance-display');
+
+      startButton.style.backgroundColor = "lightgray";
+      timerDisplay.classList.remove('hidden');
+      startButton.disabled = true;
+
+      timerInterval = setInterval(() => {
+        if (totalSeconds > 0) {
+          totalSeconds--;
+          updateTimerDisplay(timerDisplay);
+          updateBalanceDisplay(balanceDisplay);
+
+          const progressPercentage = ((21600 - totalSeconds) / 21600) * 100;
+          progressBar.style.width = progressPercentage + '%';
+
+          if (totalSeconds === 0) {
+            clearInterval(timerInterval);
+            startButton.style.backgroundColor = "#4caf50";
+            startButton.innerHTML = '<span style="color: black;">Получить 100 <img src="https://via.placeholder.com/15" alt="coin" style="vertical-align: middle;"></span>';
+          }
+        }
+      }, 1000);
     }
 
-    function tapCurrency() {
-      if (energy > 0) {
-        energy--;
-        updateEnergyDisplay();
+    function updateTimerDisplay(timerDisplay) {
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
 
-        // Анимация нажатия на изображение
-        currencyImg.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-          currencyImg.style.transform = 'scale(1)';
-        }, 200);
-      } else {
-        // Анимация нехватки энергии
-        energyCount.innerText = "Нет энергии!";
-        energyCount.style.color = 'red';
-      }
+      timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
-    function restoreEnergy() {
-      if (energy < maxEnergy) {
-        energy++;
-        updateEnergyDisplay();
-      }
+    function updateBalanceDisplay(balanceDisplay) {
+      earnedPoints = Math.floor((100 * (21600 - totalSeconds)) / 21600);
+      balanceDisplay.textContent = `Баланс: ${earnedPoints} / 100`;
     }
 
-    // Запрос текущего баланса энергии с сервера
-    function fetchEnergyFromServer() {
-      // Заглушка для сервера, замените на ваш реальный AJAX-запрос
-      const simulatedEnergy = Math.floor(Math.random() * (maxEnergy + 1));
-      energy = simulatedEnergy;
-      updateEnergyDisplay();
-    }
+    document.getElementById('start-farming-btn').addEventListener('click', startFarming);
 
     function showContent(page, element) {
       const content = {
-        home: `
-          <div>
-            <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
-            <div class="energy-counter">
-              <img src="https://cdn-icons-png.flaticon.com/512/2682/2682835.png" alt="Energy" id="energy-icon">
-              <span id="energy-count">${energy} / ${maxEnergy}</span>
-            </div>
-          </div>
-        `,
+        home: '<h1 style="color: white;">Главное меню</h1>',
         leaderboard: '<h1 style="color: white;">Рейтинг</h1><p style="color: white;">Здесь будет список лидеров.</p>',
         interesting: '<h1 style="color: white;">Интересное</h1><p style="color: white;">Подпишитесь на наш Telegram-канал для получения последних новостей.</p>',
         referral: '<h1 style="color: white;">Реферальная Система</h1><p style="color: white;">Создайте реферальную ссылку и получайте бонусы.</p>',
         tasks: '<h1 style="color: white;">Задания</h1><ul style="color: white;"><li>Задание 1: Нажмите на валюту 50 раз.</li><li>Задание 2: Подпишитесь на наш Telegram-канал.</li><li>Задание 3: Пригласите друга.</li></ul>',
       };
 
-      // Меняем содержимое
       document.getElementById('main-content').innerHTML = content[page];
-
-      // Обновляем счетчик энергии для новой страницы
-      if (page === 'home') {
-        updateEnergyDisplay(); // Обновляем отображение энергии
-      } else {
-        // При переходе на другие страницы, сохраняем текущее значение энергии
-        const currentEnergy = localStorage.getItem('energy');
-        energy = parseInt(currentEnergy) || 1000; // Если ничего нет, ставим 1000
-      }
-
-      // Убираем активный класс у всех кнопок
       document.querySelectorAll('.bottom-menu button').forEach(btn => btn.classList.remove('active'));
-
-      // Добавляем активный класс к нажатой кнопке
       element.classList.add('active');
     }
 
-    // Запрет выделения текста на странице
     document.addEventListener('selectstart', function(e) {
       e.preventDefault();
     });
 
-    // Запрет контекстного меню на всей странице
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     });
-
-    // Восстановление энергии каждую секунду
-    setInterval(restoreEnergy, 1000);
-
-    // Запрос текущего баланса энергии каждую секунду
-    setInterval(fetchEnergyFromServer, 1000);
-
-    // Обновление отображения энергии при загрузке
-    updateEnergyDisplay();
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
