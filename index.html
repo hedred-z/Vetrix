@@ -10,7 +10,6 @@
       padding: 0;
       font-family: Arial, sans-serif;
       background-color: #000;
-      color: #fff;
       display: flex;
       flex-direction: column;
       height: 100vh;
@@ -24,9 +23,39 @@
     }
 
     main {
-      padding: 20px;
       flex-grow: 1;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    #currency-img {
+      width: 200px;
+      height: 200px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    #currency-img:active {
+      transform: scale(0.9);
+    }
+
+    .energy-counter {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+    }
+
+    .energy-counter img {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      transition: height 1s ease-out;
     }
 
     .bottom-menu {
@@ -73,8 +102,11 @@
 <body>
   <div class="container">
     <main id="main-content">
-      <h1>Главная страница</h1>
-      <p>Добро пожаловать на главную страницу!</p>
+      <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
+      <div class="energy-counter">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon">
+        <span id="energy-count">1000 / 1000</span>
+      </div>
     </main>
 
     <footer class="bottom-menu">
@@ -87,9 +119,36 @@
   </div>
 
   <script>
+    let energy = 1000;
+    const maxEnergy = 1000;
+    const currencyImg = document.getElementById('currency-img');
+    const energyCount = document.getElementById('energy-count');
+    const energyIcon = document.getElementById('energy-icon');
+
+    function tapCurrency() {
+      if (energy > 0) {
+        energy--;
+        energyCount.innerText = `${energy} / ${maxEnergy}`;
+
+        // Анимация уменьшения молнии по мере использования энергии
+        energyIcon.style.height = `${(energy / maxEnergy) * 20}px`;
+
+        // Анимация нажатия на изображение
+        currencyImg.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          currencyImg.style.transform = 'scale(1)';
+        }, 200);
+      } else {
+        // Анимация нехватки энергии
+        energyCount.innerText = "Нет энергии!";
+        energyCount.style.color = 'red';
+        energyIcon.style.height = '0px';
+      }
+    }
+
     function showContent(page, element) {
       const content = {
-        home: '<h1>Главная страница</h1><p>Добро пожаловать на главную страницу!</p>',
+        home: '<img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()"><div class="energy-counter"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon"><span id="energy-count">1000 / 1000</span></div>',
         leaderboard: '<h1>Рейтинг</h1><p>Здесь будет список лидеров.</p>',
         interesting: '<h1>Интересное</h1><p>Подпишитесь на наш Telegram-канал для получения последних новостей.</p>',
         referral: '<h1>Реферальная Система</h1><p>Создайте реферальную ссылку и получайте бонусы.</p>',
