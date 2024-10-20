@@ -46,8 +46,8 @@
 
     .energy-counter {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
+      top: 20px; /* Положение выше */
+      left: 20px; /* Слева */
       color: #fff;
       font-size: 18px;
       display: flex;
@@ -177,6 +177,16 @@
       // Добавляем активный класс к нажатой кнопке
       element.classList.add('active');
     }
+
+    // Запрет выделения текста на странице
+    document.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+    });
+
+    // Запрет контекстного меню на всей странице
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
