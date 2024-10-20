@@ -46,6 +46,7 @@
       cursor: pointer;
       position: relative;
       transition: background-color 0.3s ease;
+      margin-bottom: 20px; /* Добавлено для отступа между кнопкой и меню */
       overflow: hidden;
     }
 
@@ -83,6 +84,21 @@
     .hidden {
       display: none;
     }
+
+    footer {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    footer button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -112,12 +128,20 @@
     let totalSeconds = 21600; // 6 hours
     let earnedPoints = 0;
 
-    function startFarming() {
-      const startButton = document.getElementById('start-farming-btn');
-      const timerDisplay = document.getElementById('timer-display');
-      const progressBar = document.getElementById('progress-bar');
-      const balanceDisplay = document.getElementById('balance-display');
+    const timerDisplay = document.getElementById('timer-display');
+    const progressBar = document.getElementById('progress-bar');
+    const balanceDisplay = document.getElementById('balance-display');
+    const startButton = document.getElementById('start-farming-btn');
 
+    // Загрузка сохраненного времени из localStorage
+    const savedTime = localStorage.getItem('remainingTime');
+    if (savedTime) {
+      totalSeconds = parseInt(savedTime, 10);
+      updateTimerDisplay();
+      updateBalanceDisplay();
+    }
+
+    function startFarming() {
       startButton.style.backgroundColor = "lightgray";
       timerDisplay.classList.remove('hidden');
       startButton.disabled = true;
@@ -125,8 +149,9 @@
       timerInterval = setInterval(() => {
         if (totalSeconds > 0) {
           totalSeconds--;
-          updateTimerDisplay(timerDisplay);
-          updateBalanceDisplay(balanceDisplay);
+          updateTimerDisplay();
+          updateBalanceDisplay();
+          localStorage.setItem('remainingTime', totalSeconds); // Сохранение оставшегося времени
 
           const progressPercentage = ((21600 - totalSeconds) / 21600) * 100;
           progressBar.style.width = progressPercentage + '%';
@@ -135,12 +160,13 @@
             clearInterval(timerInterval);
             startButton.style.backgroundColor = "#4caf50";
             startButton.innerHTML = '<span style="color: black;">Получить 100 <img src="https://via.placeholder.com/15" alt="coin" style="vertical-align: middle;"></span>';
+            localStorage.removeItem('remainingTime'); // Удаление сохраненного времени
           }
         }
       }, 1000);
     }
 
-    function updateTimerDisplay(timerDisplay) {
+    function updateTimerDisplay() {
       const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
@@ -148,12 +174,12 @@
       timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
-    function updateBalanceDisplay(balanceDisplay) {
+    function updateBalanceDisplay() {
       earnedPoints = Math.floor((100 * (21600 - totalSeconds)) / 21600);
       balanceDisplay.textContent = `Баланс: ${earnedPoints} / 100`;
     }
 
-    document.getElementById('start-farming-btn').addEventListener('click', startFarming);
+    startButton.addEventListener('click', startFarming);
 
     function showContent(page, element) {
       const content = {
