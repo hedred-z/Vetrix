@@ -6,6 +6,9 @@
   <title>Vortix</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
       margin: 0;
       overflow: hidden;
@@ -22,7 +25,6 @@
       justify-content: space-around;
       background-color: black;
       padding: 10px 0;
-      border-top: 1px solid white;
     }
     .bottom-menu button {
       background: none;
@@ -35,31 +37,32 @@
     .bottom-menu button:focus {
       outline: none;
     }
-    .bottom-menu button:hover {
-      transform: scale(1.2);
-    }
     .bottom-menu button.active {
       transform: scale(1.5);
+      color: white;
+    }
+    .bottom-menu button:hover {
+      color: lightgrey;
     }
   </style>
 </head>
 <body>
   <footer class="bottom-menu">
-    <button class="active"><i class="fas fa-home"></i></button>
     <button><i class="fas fa-star"></i></button>
     <button><i class="fas fa-trophy"></i></button>
+    <button class="active"><i class="fas fa-home"></i></button>
     <button><i class="fas fa-link"></i></button>
     <button><i class="fas fa-tasks"></i></button>
   </footer>
   <script>
     const buttons = document.querySelectorAll('.bottom-menu button');
-
     buttons.forEach(button => {
       button.addEventListener('click', () => {
         buttons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
       });
     });
+    document.addEventListener('copy', e => e.preventDefault());
   </script>
 </body>
 </html>
