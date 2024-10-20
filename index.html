@@ -61,27 +61,6 @@
       color: #fff;
     }
 
-    .center-button {
-      background-color: #f00;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 18px;
-      text-align: center;
-      line-height: 60px;
-      position: absolute;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      transition: background-color 0.3s ease;
-    }
-
-    .center-button:hover {
-      background-color: #ff3333;
-    }
-
     .hidden {
       display: none;
     }
@@ -98,12 +77,10 @@
       <p>Добро пожаловать на главную страницу!</p>
     </main>
 
-    <button class="center-button" onclick="alert('Классная кнопка нажата!')">+</button>
-    
     <footer class="bottom-menu">
-      <button id="home-btn" class="active" onclick="showContent('home', this)"><i class="fas fa-home"></i></button>
       <button id="leaderboard-btn" onclick="showContent('leaderboard', this)"><i class="fas fa-trophy"></i></button>
       <button id="interesting-btn" onclick="showContent('interesting', this)"><i class="fas fa-star"></i></button>
+      <button id="home-btn" class="active" onclick="showContent('home', this)"><i class="fas fa-home"></i></button>
       <button id="referral-btn" onclick="showContent('referral', this)"><i class="fas fa-link"></i></button>
       <button id="tasks-btn" onclick="showContent('tasks', this)"><i class="fas fa-tasks"></i></button>
     </footer>
