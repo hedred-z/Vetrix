@@ -107,7 +107,7 @@
       <div>
         <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()" oncontextmenu="return false;">
         <div class="energy-counter">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Lightning_bolt_icon.svg" alt="Energy" id="energy-icon"> <!-- Иконка молнии -->
           <span id="energy-count">1000 / 1000</span>
         </div>
       </div>
@@ -165,8 +165,8 @@
           <div>
             <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()" oncontextmenu="return false;">
             <div class="energy-counter">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon">
-              <span id="energy-count">1000 / 1000</span>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Lightning_bolt_icon.svg" alt="Energy" id="energy-icon">
+              <span id="energy-count">${energy} / ${maxEnergy}</span>
             </div>
           </div>
         `,
@@ -178,6 +178,11 @@
 
       // Меняем содержимое
       document.getElementById('main-content').innerHTML = content[page];
+
+      // Обновляем счетчик энергии для новой страницы
+      if (page === 'home') {
+        updateEnergyDisplay(); // Обновляем отображение энергии
+      }
 
       // Убираем активный класс у всех кнопок
       document.querySelectorAll('.bottom-menu button').forEach(btn => btn.classList.remove('active'));
