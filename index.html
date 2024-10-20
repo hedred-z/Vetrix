@@ -4,8 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vortix</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .container {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    main {
+      padding: 20px;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .bottom-menu {
+      display: flex;
+      justify-content: space-around;
+      background-color: #111;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .bottom-menu button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 24px;
+    }
+
+    .bottom-menu button:focus {
+      outline: none;
+    }
+
+    .bottom-menu button:hover {
+      color: #888;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -15,12 +72,28 @@
     </main>
     
     <footer class="bottom-menu">
-      <a href="leaderboard.html"><button><i class="fas fa-trophy"></i></button></a>
-      <a href="interesting.html"><button><i class="fas fa-star"></i></button></a>
-      <a href="index.html"><button><i class="fas fa-home"></i></button></a>
-      <a href="referral.html"><button><i class="fas fa-link"></i></button></a>
-      <a href="tasks.html"><button><i class="fas fa-tasks"></i></button></a>
+      <button onclick="showContent('home')"><i class="fas fa-home"></i></button>
+      <button onclick="showContent('leaderboard')"><i class="fas fa-trophy"></i></button>
+      <button onclick="showContent('interesting')"><i class="fas fa-star"></i></button>
+      <button onclick="showContent('referral')"><i class="fas fa-link"></i></button>
+      <button onclick="showContent('tasks')"><i class="fas fa-tasks"></i></button>
     </footer>
   </div>
+
+  <script>
+    function showContent(page) {
+      const content = {
+        home: '<h1>Главная страница</h1><p>Добро пожаловать на главную страницу!</p>',
+        leaderboard: '<h1>Рейтинг</h1><p>Здесь будет список лидеров.</p>',
+        interesting: '<h1>Интересное</h1><p>Подпишитесь на наш Telegram-канал для получения последних новостей.</p>',
+        referral: '<h1>Реферальная Система</h1><p>Создайте реферальную ссылку и получайте бонусы.</p>',
+        tasks: '<h1>Задания</h1><ul><li>Задание 1: Нажмите на валюту 50 раз.</li><li>Задание 2: Подпишитесь на наш Telegram-канал.</li><li>Задание 3: Пригласите друга.</li></ul>',
+      };
+
+      document.getElementById('main-content').innerHTML = content[page];
+    }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </body>
 </html>
