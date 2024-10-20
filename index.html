@@ -4,206 +4,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vortix</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
       overflow: hidden;
       user-select: none;
-    }
-
-    .container {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px;
-    }
-
-    main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      text-align: center;
-    }
-
-    .start-button {
-      width: 100%;
-      height: 60px;
-      background-color: white;
-      color: black;
-      border: none;
-      border-radius: 10px;
-      font-size: 24px;
-      cursor: pointer;
-      position: relative;
-      transition: background-color 0.3s ease;
-      margin-bottom: 20px; /* Добавлено для отступа между кнопкой и меню */
-      overflow: hidden;
-    }
-
-    .start-button:hover {
-      background-color: lightgray;
-    }
-
-    .timer {
-      position: absolute;
-      bottom: 80px;
-      right: 20px;
+      background-color: black;
       color: white;
-      font-size: 20px;
     }
-
-    .balance {
-      position: absolute;
-      top: 20px;
-      color: white;
-      font-size: 20px;
-    }
-
-    .farming-button {
-      position: relative;
-      transition: background-color 0.5s, width 0.5s;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(to right, #4caf50 0%, #4caf50 0%, #333 0%);
-      border-radius: 10px;
-      transition: width 0.5s;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    footer {
+    .bottom-menu {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
       display: flex;
       justify-content: space-around;
-      align-items: center;
-      margin-top: auto;
+      background-color: black;
+      padding: 10px 0;
+      border-top: 1px solid white;
     }
-
-    footer button {
+    .bottom-menu button {
       background: none;
       border: none;
       color: white;
       font-size: 24px;
       cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .bottom-menu button:focus {
+      outline: none;
+    }
+    .bottom-menu button:hover {
+      transform: scale(1.2);
+    }
+    .bottom-menu button.active {
+      transform: scale(1.5);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <main id="main-content">
-      <div>
-        <h1 style="color: white;">Главное меню</h1>
-      </div>
-      <div class="balance" id="balance-display">Баланс: 0 / 100</div>
-      <button class="start-button" id="start-farming-btn">
-        <span class="farming-button">Start Farming</span>
-        <div class="progress-bar" id="progress-bar"></div>
-      </button>
-      <div class="timer hidden" id="timer-display">6:00:00</div>
-    </main>
-    <footer class="bottom-menu">
-      <button id="leaderboard-btn" onclick="showContent('leaderboard', this)"><i class="fas fa-trophy"></i></button>
-      <button id="interesting-btn" onclick="showContent('interesting', this)"><i class="fas fa-star"></i></button>
-      <button id="home-btn" class="active" onclick="showContent('home', this)"><i class="fas fa-home"></i></button>
-      <button id="referral-btn" onclick="showContent('referral', this)"><i class="fas fa-link"></i></button>
-      <button id="tasks-btn" onclick="showContent('tasks', this)"><i class="fas fa-tasks"></i></button>
-    </footer>
-  </div>
-
+  <footer class="bottom-menu">
+    <button class="active"><i class="fas fa-home"></i></button>
+    <button><i class="fas fa-star"></i></button>
+    <button><i class="fas fa-trophy"></i></button>
+    <button><i class="fas fa-link"></i></button>
+    <button><i class="fas fa-tasks"></i></button>
+  </footer>
   <script>
-    let timerInterval;
-    let totalSeconds = 21600; // 6 hours
-    let earnedPoints = 0;
+    const buttons = document.querySelectorAll('.bottom-menu button');
 
-    const timerDisplay = document.getElementById('timer-display');
-    const progressBar = document.getElementById('progress-bar');
-    const balanceDisplay = document.getElementById('balance-display');
-    const startButton = document.getElementById('start-farming-btn');
-
-    // Загрузка сохраненного времени из localStorage
-    const savedTime = localStorage.getItem('remainingTime');
-    if (savedTime) {
-      totalSeconds = parseInt(savedTime, 10);
-      updateTimerDisplay();
-      updateBalanceDisplay();
-    }
-
-    function startFarming() {
-      startButton.style.backgroundColor = "lightgray";
-      timerDisplay.classList.remove('hidden');
-      startButton.disabled = true;
-
-      timerInterval = setInterval(() => {
-        if (totalSeconds > 0) {
-          totalSeconds--;
-          updateTimerDisplay();
-          updateBalanceDisplay();
-          localStorage.setItem('remainingTime', totalSeconds); // Сохранение оставшегося времени
-
-          const progressPercentage = ((21600 - totalSeconds) / 21600) * 100;
-          progressBar.style.width = progressPercentage + '%';
-
-          if (totalSeconds === 0) {
-            clearInterval(timerInterval);
-            startButton.style.backgroundColor = "#4caf50";
-            startButton.innerHTML = '<span style="color: black;">Получить 100 <img src="https://via.placeholder.com/15" alt="coin" style="vertical-align: middle;"></span>';
-            localStorage.removeItem('remainingTime'); // Удаление сохраненного времени
-          }
-        }
-      }, 1000);
-    }
-
-    function updateTimerDisplay() {
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-
-    function updateBalanceDisplay() {
-      earnedPoints = Math.floor((100 * (21600 - totalSeconds)) / 21600);
-      balanceDisplay.textContent = `Баланс: ${earnedPoints} / 100`;
-    }
-
-    startButton.addEventListener('click', startFarming);
-
-    function showContent(page, element) {
-      const content = {
-        home: '<h1 style="color: white;">Главное меню</h1>',
-        leaderboard: '<h1 style="color: white;">Рейтинг</h1><p style="color: white;">Здесь будет список лидеров.</p>',
-        interesting: '<h1 style="color: white;">Интересное</h1><p style="color: white;">Подпишитесь на наш Telegram-канал для получения последних новостей.</p>',
-        referral: '<h1 style="color: white;">Реферальная Система</h1><p style="color: white;">Создайте реферальную ссылку и получайте бонусы.</p>',
-        tasks: '<h1 style="color: white;">Задания</h1><ul style="color: white;"><li>Задание 1: Нажмите на валюту 50 раз.</li><li>Задание 2: Подпишитесь на наш Telegram-канал.</li><li>Задание 3: Пригласите друга.</li></ul>',
-      };
-
-      document.getElementById('main-content').innerHTML = content[page];
-      document.querySelectorAll('.bottom-menu button').forEach(btn => btn.classList.remove('active'));
-      element.classList.add('active');
-    }
-
-    document.addEventListener('selectstart', function(e) {
-      e.preventDefault();
-    });
-
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        buttons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+      });
     });
   </script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </body>
 </html>
