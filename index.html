@@ -58,7 +58,6 @@
       width: 20px;
       height: 20px;
       margin-right: 5px;
-      transition: height 1s ease-out;
     }
 
     .bottom-menu {
@@ -124,19 +123,22 @@
   </div>
 
   <script>
-    let energy = 1000;
+    let energy = parseInt(localStorage.getItem('energy')) || 1000;
     const maxEnergy = 1000;
     const currencyImg = document.getElementById('currency-img');
     const energyCount = document.getElementById('energy-count');
     const energyIcon = document.getElementById('energy-icon');
 
+    function updateEnergyDisplay() {
+      energyCount.innerText = `${energy} / ${maxEnergy}`;
+      energyIcon.style.height = `${(energy / maxEnergy) * 20}px`;
+      localStorage.setItem('energy', energy); // Сохраняем текущее значение энергии
+    }
+
     function tapCurrency() {
       if (energy > 0) {
         energy--;
-        energyCount.innerText = `${energy} / ${maxEnergy}`;
-
-        // Анимация уменьшения молнии по мере использования энергии
-        energyIcon.style.height = `${(energy / maxEnergy) * 20}px`;
+        updateEnergyDisplay();
 
         // Анимация нажатия на изображение
         currencyImg.style.transform = 'scale(0.9)';
@@ -147,7 +149,13 @@
         // Анимация нехватки энергии
         energyCount.innerText = "Нет энергии!";
         energyCount.style.color = 'red';
-        energyIcon.style.height = '0px';
+      }
+    }
+
+    function restoreEnergy() {
+      if (energy < maxEnergy) {
+        energy++;
+        updateEnergyDisplay();
       }
     }
 
@@ -187,6 +195,12 @@
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     });
+
+    // Восстановление энергии каждую секунду
+    setInterval(restoreEnergy, 1000);
+
+    // Обновление отображения энергии при загрузке
+    updateEnergyDisplay();
   </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
