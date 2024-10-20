@@ -13,6 +13,8 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      overflow: hidden; /* Запрет прокрутки */
+      user-select: none; /* Запрет выделения текста */
     }
 
     .container {
@@ -28,6 +30,7 @@
       justify-content: center;
       align-items: center;
       position: relative;
+      text-align: center; /* Центрирование текста */
     }
 
     #currency-img {
@@ -102,10 +105,12 @@
 <body>
   <div class="container">
     <main id="main-content">
-      <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
-      <div class="energy-counter">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon">
-        <span id="energy-count">1000 / 1000</span>
+      <div>
+        <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
+        <div class="energy-counter">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon">
+          <span id="energy-count">1000 / 1000</span>
+        </div>
       </div>
     </main>
 
@@ -148,11 +153,19 @@
 
     function showContent(page, element) {
       const content = {
-        home: '<img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()"><div class="energy-counter"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon"><span id="energy-count">1000 / 1000</span></div>',
-        leaderboard: '<h1>Рейтинг</h1><p>Здесь будет список лидеров.</p>',
-        interesting: '<h1>Интересное</h1><p>Подпишитесь на наш Telegram-канал для получения последних новостей.</p>',
-        referral: '<h1>Реферальная Система</h1><p>Создайте реферальную ссылку и получайте бонусы.</p>',
-        tasks: '<h1>Задания</h1><ul><li>Задание 1: Нажмите на валюту 50 раз.</li><li>Задание 2: Подпишитесь на наш Telegram-канал.</li><li>Задание 3: Пригласите друга.</li></ul>',
+        home: `
+          <div>
+            <img src="https://raw.githubusercontent.com/hedred-z/Vetrix/8a62ac0de046531704b0e567246af33a1a08cad9/VRX.png" alt="Currency" id="currency-img" onclick="tapCurrency()">
+            <div class="energy-counter">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Lightning_icon.svg/2048px-Lightning_icon.svg.png" alt="Energy" id="energy-icon">
+              <span id="energy-count">1000 / 1000</span>
+            </div>
+          </div>
+        `,
+        leaderboard: '<h1 style="color: white;">Рейтинг</h1><p style="color: white;">Здесь будет список лидеров.</p>',
+        interesting: '<h1 style="color: white;">Интересное</h1><p style="color: white;">Подпишитесь на наш Telegram-канал для получения последних новостей.</p>',
+        referral: '<h1 style="color: white;">Реферальная Система</h1><p style="color: white;">Создайте реферальную ссылку и получайте бонусы.</p>',
+        tasks: '<h1 style="color: white;">Задания</h1><ul style="color: white;"><li>Задание 1: Нажмите на валюту 50 раз.</li><li>Задание 2: Подпишитесь на наш Telegram-канал.</li><li>Задание 3: Пригласите друга.</li></ul>',
       };
 
       // Меняем содержимое
